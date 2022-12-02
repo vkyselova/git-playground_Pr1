@@ -10,7 +10,14 @@ def is_game_over():
     return guessed == WORDS_TO_WIN or errors == ERRORS_TO_LOSE
 
 
+def if_candidate_repeated(candidate):
+    if candidate in guess_list:
+        return True
+
+
 def guess_is_valid(candidate):
+    guess_list.append(candidate)
+
     for letter in candidate:
         if letter not in word:
             print(f"You can not use letter {letter}")
@@ -19,13 +26,14 @@ def guess_is_valid(candidate):
         if count < candidate.count(letter):
             print(f"You can use letter {letter} only {count} times")
             return False
-    return True
+    return True, guess_list
 
 
 guessed = 0
 errors = 0
 
 guesses = []
+guess_list = []
 
 WORDS_TO_WIN = 5
 ERRORS_TO_LOSE = 3
@@ -41,6 +49,10 @@ print(f"Your word is '{word}'")
 while not is_game_over():
     guess = input("Your next take: ")
 
+    if if_candidate_repeated(guess):
+        print("You've already tried this word. Please, enter another one!")
+        continue
+
     if not guess_is_valid(guess):
         continue
 
@@ -54,3 +66,5 @@ while not is_game_over():
     else:
         errors += 1
         print(f"Oops :( No such word, you have {ERRORS_TO_LOSE - errors} lives more")
+else:
+    print(":'( :'( :'( You've lost :'( :'( :'(")
